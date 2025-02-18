@@ -1,0 +1,43 @@
+@page "/Mesas"
+@using ComandaOnline.Components.Components
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "AuthenticatedUser")]
+
+<h3>Página Protegida</h3>
+
+
+<h3>Controle de Mesas</h3>
+<div class="container">
+    <div class="row">
+        @foreach (var mesa in MesasC)
+        {
+            <div class="col-12 col-md-6 col-lg-3">
+                <CardMesa Numero="@mesa.Numero" ValorAtual="@mesa.ValorAtual" EstaLivre="@mesa.EstaLivre" />
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Mesa>? MesasC { get; set; }
+
+    protected override void OnInitialized()
+    {
+        MesasC = new List<Mesa>
+        {
+            new Mesa { Numero = 1, ValorAtual = 150.75m, EstaLivre = false },
+            new Mesa { Numero = 2, ValorAtual = 0.00m, EstaLivre = true },
+            new Mesa { Numero = 3, ValorAtual = 75.20m, EstaLivre = false },
+            new Mesa { Numero = 4, ValorAtual = 50.00m, EstaLivre = true }
+            // Adicione mais mesas conforme necessário
+        };
+    }
+
+    public class Mesa
+    {
+        public int Numero { get; set; }
+        public decimal ValorAtual { get; set; }
+        public bool EstaLivre { get; set; }
+    }
+
+}

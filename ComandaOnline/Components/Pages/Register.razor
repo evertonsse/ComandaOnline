@@ -1,0 +1,124 @@
+@page "/register"
+@using System.Runtime.InteropServices.JavaScript
+@using System.Text.RegularExpressions
+@using ComandaOnline.Components.Layout
+@using ComandaOnline.Models
+@inject NavigationManager Navigation
+@layout EmptyLayout
+@inject AppDbContext DbContext
+
+<MudPaper Height="80vh" class="d-flex " Elevation="0">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
+        <MudForm @bind-IsValid="@_success" @bind-Errors="@_errors">
+            <MudPaper Elevation="20" class="pa-8">
+                <MudText Typo="Typo.h4" Class="mb-4">Cadastre-se</MudText>
+
+                <MudTextField
+                    @bind-Value="_user.Name"
+                    Required="true"
+                    RequiredError="O Nome é obrigatório"
+                    Label="Nome"
+                    Variant="Variant.Text" Class="mb-4"
+                />
+
+                <MudTextField
+                    @bind-Value="_user.Email"
+                    Required="true"
+                    RequiredError="O E-mail é obrigatório"
+                    Label="E-mail"
+                    Variant="Variant.Text"
+                    Class="mb-4"
+                />
+
+                <MudTextField
+                    @bind-Value="_user.Password"
+                    Label="Senha" Required="true"
+                    Variant="Variant.Text"
+                    @ref="_pwField"
+                    InputType="InputType.Password"
+                    Class="mb-4"
+                    Immediate="true"
+                    TextChanged="PasswordStrength"
+                />
+
+                <MudTextField
+                    T="string"
+                    Required="true"
+                    Label="Confime sua senha"
+                    Variant="Variant.Text"
+                    InputType="InputType.Password"
+                    Class="mb-4"
+                    Immediate="true"
+                    TextChanged="PasswordMatch"
+                    @ref="_pwFieldMatch"
+                />
+
+                <MudButton Variant="Variant.Filled" Disabled="@(!_success)"
+                           OnClick="@(async () => await RegisterUser())" Color="Color.Primary">Cadastrar
+                </MudButton>
+
+            </MudPaper>
+        </MudForm>
+
+    </MudContainer>
+</MudPaper>
+
+@code {
+    string[] _errors = [];
+    bool _success;
+    MudTextField<string>? _pwField;
+    MudTextField<string>? _pwFieldMatch;
+    readonly UserModel _user = new UserModel();
+
+    private async Task RegisterUser() {
+        string endriptedPassword = CryptoHelper.Encrypt(_user.Password);
+        _user.Password = endriptedPassword;
+
+        try{
+            await DbContext.AddAsync(_user);
+            await DbContext.SaveChangesAsync();
+
+        }
+        catch (Exception e){
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    private void PasswordStrength() {
+        if (_pwField is not null){
+            if (_pwField.Value.Length < 8){
+                _pwField.Error = true;
+                _pwField.ErrorText = "Sua senha precisa ter 8 caracteres ou mais.";
+            }
+
+            if (!Regex.IsMatch(_pwField.Value, @"[A-Z]")){
+                _pwField.Error = true;
+                _pwField.ErrorText = "Sua senha deve conter ao menos uma letra maiúscula.";
+            }
+
+
+            if (!Regex.IsMatch(_pwField.Value, @"[a-z]")){
+                _pwField.Error = true;
+                _pwField.ErrorText += "Sua senha deve conter ao menos uma letrar minúscula.";
+            }
+
+            if (!Regex.IsMatch(_pwField.Value, @"[0-9]")){
+                _pwField.Error = true;
+                _pwField.ErrorText += "Sua senha deve conter ao menos um número.";
+            }
+        }
+
+    }
+
+    private void PasswordMatch(string arg) {
+        if (_pwField?.Value != _pwFieldMatch?.Value){
+            _pwFieldMatch.Error = true;
+            _pwFieldMatch.ErrorText = "As senhas não coincidem";
+        }
+        else{
+            _pwFieldMatch.Error = false;
+            _pwFieldMatch.ErrorText = string.Empty;
+        }
+    }
+
+}

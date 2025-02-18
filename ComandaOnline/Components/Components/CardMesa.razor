@@ -1,0 +1,18 @@
+@code {
+    [Parameter]
+    public int Numero { get; set; }
+
+    [Parameter]
+    public decimal ValorAtual { get; set; }
+
+    [Parameter]
+    public bool EstaLivre { get; set; }
+}
+
+<div class="card text-white mb-3" style="background-color: @(EstaLivre ? "green" : "red");">
+    <div class="card-body">
+        <h5 class="card-title">Mesa @Numero</h5>
+        <p class="card-text">Valor Atual: R$ @ValorAtual</p>
+        <p class="card-text">Status: @(EstaLivre ? "Livre" : "Em Uso")</p>
+    </div>
+</div>
