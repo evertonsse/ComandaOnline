@@ -49,6 +49,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9NZXNhcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/everton/RiderProjects/ComandaOnline/ComandaOnline/Components/Pages/Organization.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Pcmdhbml6YXRpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/everton/RiderProjects/ComandaOnline/ComandaOnline/Components/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9SZWdpc3Rlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

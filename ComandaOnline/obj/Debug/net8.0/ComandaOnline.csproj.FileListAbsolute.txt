@@ -116,3 +116,4 @@
 /home/everton/RiderProjects/ComandaOnline/ComandaOnline/bin/Debug/net8.0/Microsoft.Extensions.Localization.Abstractions.dll
 /home/everton/RiderProjects/ComandaOnline/ComandaOnline/bin/Debug/net8.0/Microsoft.JSInterop.dll
 /home/everton/RiderProjects/ComandaOnline/ComandaOnline/bin/Debug/net8.0/MudBlazor.dll
+/home/everton/RiderProjects/ComandaOnline/ComandaOnline/obj/Debug/net8.0/ComandaOnline.sourcelink.json
