@@ -10,12 +10,17 @@
     <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
         <MudForm>
             <MudPaper Elevation="20" class="pa-8">
-                <MudText Typo="Typo.h6" Class="mb-4">Crie ou entre para uma organização</MudText>
+                <MudText Typo="Typo.subtitle1" Class="mb-4">Defina uma oraganização para fazer parte ou crie a sua própria</MudText>
+                <MudToggleGroup T="int?" SelectionMode="SelectionMode.ToggleSelection" @bind-Value="_registrationType" Color="Color.Primary" CheckMark>
+                    <MudToggleItem Value="@((int?)1)" Text="Criar nova Organização" />
+                    <MudToggleItem Value="@((int?)2)" Text="Entrar em existente" />
+ 
+                </MudToggleGroup>
+               
+                
                 <MudTextField T="string" bind-Value="@_organization.Key" Class="mb-4" Label="Chave da Organização"></MudTextField>
                 <MudTextField T="string" bind-Value="@_organization.Name" Class="mb-4" Label="Nome"></MudTextField>
-                <MudTextField T="string"  Class="mb-4" Label="Proprietário"></MudTextField>
-                
-            
+               
                 <MudButton Variant="Variant.Filled" Color="Color.Primary">Gerar Nova Organização</MudButton>
 
             </MudPaper>
@@ -27,7 +32,9 @@
 
 
 @code {
+    private int? _registrationType;
     OrganizationModel _organization = new OrganizationModel();
+    
 
 
 }
