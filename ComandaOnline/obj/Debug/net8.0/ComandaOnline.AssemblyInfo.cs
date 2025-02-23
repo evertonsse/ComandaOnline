@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ComandaOnline")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df08d510d65f186d2403498231da4d04d0041be6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7db0a12234953e729c3e5b34568fdd5c074a681d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ComandaOnline")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ComandaOnline")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -11,7 +11,8 @@ public class OrganizationModel {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Key { get; set; } = string.Empty;
-    public int? Owner { get; set; }
+    public int Type { get; set; }
+    public int Owner { get; set; }
 
     public ICollection<UserModel>? Users {get; set; }
 }

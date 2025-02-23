@@ -10,18 +10,28 @@
     <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
         <MudForm>
             <MudPaper Elevation="20" class="pa-8">
-                <MudText Typo="Typo.subtitle1" Class="mb-4">Defina uma oraganização para fazer parte ou crie a sua própria</MudText>
-                <MudToggleGroup T="int?" SelectionMode="SelectionMode.ToggleSelection" @bind-Value="_registrationType" Color="Color.Primary" CheckMark>
-                    <MudToggleItem Value="@((int?)1)" Text="Criar nova Organização" />
-                    <MudToggleItem Value="@((int?)2)" Text="Entrar em existente" />
- 
+                <MudText Typo="Typo.subtitle1" Class="mb-5"> Escolha uma oraganização para fazer parte ou crie a sua
+                    própria
+                </MudText>
+
+                <MudToggleGroup T="int" SelectionMode="SelectionMode.ToggleSelection" @bind-Value="_registrationType" Color="Color.Primary">
+                    <MudToggleItem Value="@((int)1)" Text="Criar nova Organização"/>
+                    <MudToggleItem Value="@((int)2)" Text="Entrar em existente"/>
                 </MudToggleGroup>
-               
-                
-                <MudTextField T="string" bind-Value="@_organization.Key" Class="mb-4" Label="Chave da Organização"></MudTextField>
-                <MudTextField T="string" bind-Value="@_organization.Name" Class="mb-4" Label="Nome"></MudTextField>
-               
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Gerar Nova Organização</MudButton>
+
+                <MudTextField T="string"  Disabled="_newOrganization " bind-Value="@_organization.Key" Class="mb-4 mt-4"
+                              Label="Chave da Organização"></MudTextField>
+                <MudTextField T="string" Disabled="_existentOrganization" bind-Value="@_organization.Name" Class="mb-4"
+                              Label="Nome"/>
+                <MudSelect T="int" Disabled="_existentOrganization" bind-Value="@_organization.Type" Class="mb-4">
+                    <MudSelectItem Value="1">Bar</MudSelectItem>
+                    <MudSelectItem Value="2">Restaurante</MudSelectItem>
+                    <MudSelectItem Value="3">Pastelaria</MudSelectItem>
+                    <MudSelectItem Value="4">Pizzaria</MudSelectItem>
+
+                </MudSelect>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">Confirmar</MudButton>
 
             </MudPaper>
         </MudForm>
@@ -32,9 +42,26 @@
 
 
 @code {
-    private int? _registrationType;
+    private int _registrationType;
     OrganizationModel _organization = new OrganizationModel();
-    
+    bool _existentOrganization = false;
+    bool _newOrganization = true;
 
 
-}
+    private void RegistrationTypeChanged()
+    {
+        
+        if (_registrationType == 1)
+        {
+            
+            _existentOrganization = true;
+            _newOrganization = false;
+        }
+        else if (_registrationType == 2)
+        {
+            _existentOrganization = false;
+            _newOrganization = true;
+        }
+    }
+
+ }

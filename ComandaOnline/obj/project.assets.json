@@ -2576,7 +2576,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/255/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/home/everton/.dotnet/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
