@@ -1,4 +1,4 @@
-@page "/Organization"
+@page "/Organization/{User:int}"
 @using ComandaOnline.Components.Layout
 @using ComandaOnline.Models
 @inject NavigationManager Navigation
@@ -14,21 +14,21 @@
                     própria
                 </MudText>
 
-                <MudToggleGroup T="int" SelectionMode="SelectionMode.ToggleSelection" @bind-Value="_registrationType" Color="Color.Primary">
-                    <MudToggleItem Value="@((int)1)" Text="Criar nova Organização"/>
-                    <MudToggleItem Value="@((int)2)" Text="Entrar em existente"/>
+                <MudToggleGroup T="bool" SelectionMode="SelectionMode.ToggleSelection"  @bind-Value="_registrationType" Color="Color.Primary">
+                    <MudToggleItem Value="@((bool)false)"   Text="Criar nova Organização"/>
+                    <MudToggleItem Value="@((bool)true)" Text="Entrar em existente"/>
                 </MudToggleGroup>
 
-                <MudTextField T="string"  Disabled="_newOrganization " bind-Value="@_organization.Key" Class="mb-4 mt-4"
+                <MudTextField T="string"  Disabled="!_registrationType " Variant="Variant.Text"  bind-Value="@_organization.Key" Class="mb-4 mt-4"
                               Label="Chave da Organização"></MudTextField>
-                <MudTextField T="string" Disabled="_existentOrganization" bind-Value="@_organization.Name" Class="mb-4"
+                <MudTextField T="string" Disabled="_registrationType" bind-Value="@_organization.Name" Class="mb-4" Variant="Variant.Text"
                               Label="Nome"/>
-                <MudSelect T="int" Disabled="_existentOrganization" bind-Value="@_organization.Type" Class="mb-4">
+                <MudSelect T="int" Disabled="_registrationType" Text="Tipo" bind-Value="@_organization.Type" Variant="Variant.Text" Value="2" Class="mb-4">
                     <MudSelectItem Value="1">Bar</MudSelectItem>
                     <MudSelectItem Value="2">Restaurante</MudSelectItem>
                     <MudSelectItem Value="3">Pastelaria</MudSelectItem>
                     <MudSelectItem Value="4">Pizzaria</MudSelectItem>
-
+                    
                 </MudSelect>
 
                 <MudButton Variant="Variant.Filled" Color="Color.Primary">Confirmar</MudButton>
@@ -42,26 +42,13 @@
 
 
 @code {
-    private int _registrationType;
+
+    [Parameter]
+    public int User { get; set; } 
+    
+    private bool _registrationType = false ;
     OrganizationModel _organization = new OrganizationModel();
-    bool _existentOrganization = false;
-    bool _newOrganization = true;
 
 
-    private void RegistrationTypeChanged()
-    {
-        
-        if (_registrationType == 1)
-        {
-            
-            _existentOrganization = true;
-            _newOrganization = false;
-        }
-        else if (_registrationType == 2)
-        {
-            _existentOrganization = false;
-            _newOrganization = true;
-        }
-    }
-
+    
  }

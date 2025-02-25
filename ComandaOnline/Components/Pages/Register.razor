@@ -9,7 +9,7 @@
 
 <MudPaper Height="80vh" class="d-flex " Elevation="0">
     <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
-        <MudForm @bind-IsValid="@_success" @bind-Errors="@_errors">
+        <MudForm @bind-IsValid="@_success" @bind-Errors="@_errors" >
             <MudPaper Elevation="20" class="pa-8">
                 <MudText Typo="Typo.h4" Class="mb-4">Cadastre-se</MudText>
 
@@ -62,7 +62,16 @@
                 />
 
                 <MudButton Variant="Variant.Filled" Disabled="@(!_success)"
-                           OnClick="@(async () => await RegisterUser())" Color="Color.Primary">Cadastrar
+                           OnClick="RegisterUser" Color="Color.Primary">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                       
+                    }
+                    else
+                    {
+                        <MudText>Cadastrar</MudText>
+                    }
                 </MudButton>
 
             </MudPaper>
@@ -73,7 +82,8 @@
 
 @code {
     string[] _errors = [];
-    bool _success;
+     bool _success;
+    bool _userCreated, _processing;
 
     MudTextField<string>? _pwField;
     string? _erroTextPwField = string.Empty;
@@ -90,14 +100,18 @@
 
     readonly UserModel _user = new UserModel();
 
-    private async Task RegisterUser() {
+    private void RegisterUser() {
         string endriptedPassword = CryptoHelper.Encrypt(_user.Password);
         _user.Password = endriptedPassword;
 
         try{
-            await DbContext.AddAsync(_user);
-            await DbContext.SaveChangesAsync();
-
+            _success = false;
+            _processing = true; 
+             DbContext.Add(_user);
+             DbContext.SaveChanges();
+            _processing = false; 
+            _success = true; 
+            Navigation.NavigateTo("/Organization/" + _user.Id );
         }
         catch (Exception e){
             Console.WriteLine(e);
@@ -141,6 +155,10 @@
         if (existentUser is not null){
             _errorEmailField = true;
             _errorTextEmailFiel = "Já existe usuário cadastrado com este e-mail.";
+            
+        }
+        else{
+            _errorEmailField = false; 
         }
     }
 
