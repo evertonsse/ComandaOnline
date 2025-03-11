@@ -1,0 +1,53 @@
+﻿@page "/Organization/{User:int}"
+@using ComandaOnline.Views.Layout
+@using ComandaOnline.Models
+@inject NavigationManager Navigation
+@layout EmptyLayout
+@inject AppDbContext DbContext
+
+
+<MudPaper Height="80vh" class="d-flex " Elevation="0">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
+        <MudForm>
+            <MudPaper Elevation="20" class="pa-8">
+                <MudText Typo="Typo.subtitle1" Class="mb-5">
+                    Escolha uma oraganização para fazer parte ou crie a sua
+                    própria
+                </MudText>
+
+                <MudToggleGroup T="bool" SelectionMode="SelectionMode.ToggleSelection" @bind-Value="_registrationType" Color="Color.Primary">
+                    <MudToggleItem Value="@((bool)false)" Text="Criar nova Organização" />
+                    <MudToggleItem Value="@((bool)true)" Text="Entrar em existente" />
+                </MudToggleGroup>
+
+                <MudTextField T="string" Disabled="!_registrationType " Variant="Variant.Text" bind-Value="@_organization.Key" Class="mb-4 mt-4"
+                              Label="Chave da Organização"></MudTextField>
+                <MudTextField T="string" Disabled="_registrationType" bind-Value="@_organization.Name" Class="mb-4" Variant="Variant.Text"
+                              Label="Nome" />
+                <MudSelect T="int" Disabled="_registrationType" Text="Tipo" bind-Value="@_organization.Type" Variant="Variant.Text" Value="2" Class="mb-4">
+                    <MudSelectItem Value="1">Bar</MudSelectItem>
+                    <MudSelectItem Value="2">Restaurante</MudSelectItem>
+                    <MudSelectItem Value="3">Pastelaria</MudSelectItem>
+                    <MudSelectItem Value="4">Pizzaria</MudSelectItem>
+                    <MudSelectItem Value="5">Outros</MudSelectItem>
+
+                </MudSelect>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">Confirmar</MudButton>
+
+            </MudPaper>
+        </MudForm>
+
+    </MudContainer>
+</MudPaper>
+
+
+
+@code {
+
+    [Parameter]
+    public int User { get; set; }
+
+    private bool _registrationType = false;
+    OrganizationModel _organization = new OrganizationModel();
+}

@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+
+<MudThemeProvider @rendermode="InteractiveServer" @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudSnackbarProvider @rendermode="InteractiveServer"/>
+<MudDialogProvider @rendermode="InteractiveServer"/>
+<MudPopoverProvider @rendermode="InteractiveServer" />
+
+<MudLayout>
+
+    <MudAppBar Dense="false" Color="Color.Primary" Fixed="false" Elevation="20">
+        <MudSpacer/>
+        <MudButton Size="Size.Medium" Variant="Variant.Text" Color="Color.Inherit">
+            <MudText Typo="Typo.h6" Color="Color.Inherit">Comanda Online</MudText>
+        </MudButton>
+        <MudSpacer/>
+        <MudToggleIconButton Color="Color.Default"
+                             Icon="@Icons.Material.Filled.DarkMode"
+                             ToggledIcon="@Icons.Material.Filled.WbSunny"
+                             ToggledColor="Color.Default"
+                             @bind-Toggled="@_isDarkMode"
+                             @bind-Toggled:after="OnThemeToggled" />
+
+    </MudAppBar>
+    
+   
+    
+    @Body
+   
+</MudLayout>
+
+@code{
+    private readonly MudTheme _theme = new MudTheme();
+    private bool _isDarkMode;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender )
+        {
+            var savedTheme = await localStorageService.GetItemAsync<bool?>("isDarkMode");
+            _isDarkMode = savedTheme ?? false; 
+            StateHasChanged(); 
+        }
+    }
+    private async Task OnThemeToggled()
+    {
+        await localStorageService.SetItemAsync("isDarkMode", _isDarkMode); }
+
+}

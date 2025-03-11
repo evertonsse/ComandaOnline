@@ -1,0 +1,189 @@
+﻿@page "/register"
+@using System.Text.RegularExpressions
+@using ComandaOnline.Views.Layout
+@using ComandaOnline.Models
+@using Microsoft.EntityFrameworkCore
+@inject NavigationManager Navigation
+@layout EmptyLayout
+@inject AppDbContext DbContext
+
+<MudPaper Height="80vh" class="d-flex " Elevation="0">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
+        <MudForm @bind-IsValid="@_success" @bind-Errors="@_errors">
+            <MudPaper Elevation="20" class="pa-8">
+                <MudText Typo="Typo.h4" Class="mb-4">Cadastre-se</MudText>
+
+                <MudTextField @bind-Value="_user.Name"
+                              Required="true"
+                              RequiredError="O Nome é obrigatório"
+                              Label="Nome"
+                              Variant="Variant.Text" Class="mb-4" />
+
+                <MudTextField @bind-Value="_user.Email"
+                              Required="true"
+                              RequiredError="O E-mail é obrigatório"
+                              Label="E-mail"
+                              Variant="Variant.Text"
+                              Class="mb-4"
+                              @ref="@_emailField"
+                              Error="@_errorEmailField"
+                              ErrorText="@_errorTextEmailFiel"
+                              TextChanged="CheckAlreadUsedEmail" />
+
+                <MudTextField @bind-Value="_user.Password"
+                              Label="Senha" Required="true"
+                              Variant="Variant.Text"
+                              @ref="_pwField"
+                              InputType="InputType.Password"
+                              Class="mb-4"
+                              Immediate="true"
+                              TextChanged="PasswordStrength"
+                              ErrorText="@_erroTextPwField"
+                              Error="@_erroPwField" />
+
+                <MudTextField T="string"
+                              Required="true"
+                              Label="Confime sua senha"
+                              Variant="Variant.Text"
+                              InputType="InputType.Password"
+                              Class="mb-4"
+                              Immediate="true"
+                              TextChanged="PasswordMatch"
+                              @ref="_pwFieldMatch"
+                              ErrorText="@_errorTextPwFieldMatch"
+                              Error="@_errorPwFieldMatch" />
+
+                <MudButton Variant="Variant.Filled" Disabled="@(!_success)"
+                           OnClick="RegisterUser" Color="Color.Primary">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+
+                    }
+                    else
+                    {
+                        <MudText>Cadastrar</MudText>
+                    }
+                </MudButton>
+
+            </MudPaper>
+        </MudForm>
+
+    </MudContainer>
+</MudPaper>
+
+@code {
+    string[] _errors = [];
+    bool _success;
+    bool _userCreated, _processing;
+
+    MudTextField<string>? _pwField;
+    string? _erroTextPwField = string.Empty;
+    bool _erroPwField = false;
+
+    MudTextField<string>? _pwFieldMatch;
+    string _errorTextPwFieldMatch = string.Empty;
+    bool _errorPwFieldMatch = false;
+
+    MudTextField<string>? _emailField;
+    string _errorTextEmailFiel = string.Empty;
+    bool _errorEmailField = false;
+
+
+    readonly UserModel _user = new UserModel();
+
+    private void RegisterUser()
+    {
+        string endriptedPassword = CryptoHelper.Encrypt(_user.Password);
+        _user.Password = endriptedPassword;
+
+        try
+        {
+            _success = false;
+            _processing = true;
+            DbContext.Add(_user);
+            DbContext.SaveChanges();
+            _processing = false;
+            _success = true;
+            Navigation.NavigateTo("/Organization/" + _user.Id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    private void PasswordStrength()
+    {
+        _erroTextPwField = string.Empty;
+        _erroPwField = false;
+        if (_pwField is not null)
+        {
+            if (_pwField.Value is { Length: < 8 })
+            {
+                _erroPwField = true;
+                _erroTextPwField += "Sua senha precisa ter 8 caracteres ou mais.";
+                return;
+            }
+
+            if (_pwField.Value != null && !Regex.IsMatch(_pwField.Value, @"[A-Z]"))
+            {
+                _erroPwField = true;
+                _erroTextPwField += "Sua senha deve conter ao menos uma letra maiúscula.";
+                return;
+            }
+
+
+            if (_pwField.Value != null && !Regex.IsMatch(_pwField.Value, @"[a-z]"))
+            {
+                _erroPwField = true;
+                _erroTextPwField += "Sua senha deve conter ao menos uma letrar minúscula.";
+                return;
+            }
+
+            if (_pwField.Value != null && !Regex.IsMatch(_pwField.Value, @"[0-9]"))
+            {
+                _erroPwField = true;
+                _erroTextPwField += "Sua senha deve conter ao menos um número.";
+            }
+        }
+
+    }
+
+
+    private void CheckAlreadUsedEmail()
+    {
+        var existentUser = DbContext.Users.FirstOrDefault(x => x.Email == _user.Email);
+        if (existentUser is not null)
+        {
+            _errorEmailField = true;
+            _errorTextEmailFiel = "Já existe usuário cadastrado com este e-mail.";
+
+        }
+        else
+        {
+            _errorEmailField = false;
+        }
+    }
+
+    private void PasswordMatch(string arg)
+    {
+        _errorPwFieldMatch = false;
+        _errorTextPwFieldMatch = string.Empty;
+        if (_pwField?.Value != _pwFieldMatch?.Value)
+        {
+            if (_pwFieldMatch != null)
+            {
+                _errorPwFieldMatch = true;
+                _errorTextPwFieldMatch = "As senhas não coincidem";
+            }
+        }
+        else
+        {
+            if (_pwFieldMatch == null) return;
+            _errorPwFieldMatch = false;
+            _errorTextPwFieldMatch = string.Empty;
+        }
+    }
+
+}

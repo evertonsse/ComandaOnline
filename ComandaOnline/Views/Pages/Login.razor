@@ -1,0 +1,39 @@
+﻿@page "/login"
+@using ComandaOnline.Views.Layout
+@inject NavigationManager Navigation
+@layout EmptyLayout
+
+<MudPaper Height="80vh" class="d-flex " Elevation="0">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto mb-auto">
+        <MudPaper Elevation="20" class="pa-8">
+            <MudText Typo="Typo.h4" Class="mb-4">Login</MudText>
+            <MudTextField @bind-Value="username" Label="E-mail" Variant="Variant.Text" Class="mb-4" />
+            <MudTextField @bind-Value="password" Label="Senha" Variant="Variant.Text" InputType="InputType.Password"
+                          Class="mb-4" />
+
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginUser">Login</MudButton>
+                <MudSpacer />
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@(()=>Navigation.NavigateTo("/register"))">Cadastrar-se</MudButton>
+            </MudCardActions>
+
+
+        </MudPaper>
+    </MudContainer>
+</MudPaper>
+
+
+@code {
+    private string username;
+    private string password;
+
+    private void LoginUser()
+    {
+        // Aqui você pode adicionar a lógica de autenticação do usuário
+        if (username == "user" && password == "password") { Navigation.NavigateTo("/"); }
+        else
+        {
+            // Lógica de erro
+        }
+    }
+}
